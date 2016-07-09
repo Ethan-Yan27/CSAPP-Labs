@@ -13,8 +13,11 @@
 [Bomb lab 实验4, secert bomb](http://blog.csdn.net/u012336567/article/details/51782538)
 
 
-####Buffer Labs
+####Buffer Lab
 
 相关实验过程博客如下:
 
-[Buffer lab 实验](http://blog.csdn.net/u012336567/article/details/51832328)
+[Buffer lab 实验解答及总结](http://blog.csdn.net/u012336567/article/details/51832328)
+
+####Architecture Lab
+[Architecture Lab 实验解答及总结](http://blog.csdn.net/u012336567/article/details/51867766)
