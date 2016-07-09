@@ -1,0 +1,52 @@
+# Modification of asum code to compute absolute values of entries.
+# This version uses a conditional jump
+# Execution begins at address 0
+	.pos 0
+init:	irmovl Stack, %esp  	# Set up Stack pointer
+	irmovl Stack, %ebp  	# Set up base pointer
+	jmp Main		# Execute main program
+
+# Array of 4 elements
+	.align 4
+array:	.long 0x0000000d
+	.long 0xffffff40 # -0xc0
+	.long 0x00000b00
+	.long 0xffff6000 # -0xa0000
+
+Main:	irmovl $4,%eax
+	pushl %eax	# Push 4
+	irmovl array,%edx
+	pushl %edx      # Push array
+	call AbsSum	# Sum(array, 4)
+	halt
+
+	# int AbsSum(int *Start, int Count)
+AbsSum:
+	pushl %ebp
+	rrmovl %esp,%ebp
+	mrmovl 8(%ebp),%ecx 	# ecx = Start
+	mrmovl 12(%ebp),%edx	# edx = Count
+	irmovl $0, %eax		# sum = 0
+	andl   %edx,%edx
+	je     End
+/* $begin abs-sum-cmov-ys 0 */
+Loop:
+	mrmovl (%ecx),%esi      # get x = *Start
+	irmovl $0,%edi		# 0
+	subl %esi,%edi		# -x
+	cmovg %edi,%esi		# if -x > 0 then x = -x
+	addl %esi,%eax          # add x to sum
+	irmovl $4,%ebx          # 
+	addl %ebx,%ecx          # Start++
+	irmovl $-1,%ebx	        # 
+	addl %ebx,%edx          # Count--
+	jne    Loop             # Stop when 0
+/* $end abs-sum-cmov-ys 0 */
+End:	
+	popl %ebp
+	ret
+
+	.pos 0x100
+Stack:	# The stack goes here
+/* $end code-ysa */
+/* $end code-yso */

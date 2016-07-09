@@ -1,0 +1,55 @@
+                      | /* $begin code-yso */
+                      | /* $begin code-ysa */
+                      | # Execution begins at address 0
+                      | # This version uses a leave instruction
+  0x000:              | 	.pos 0
+  0x000: 30f400040000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
+  0x006: 30f500040000 | 	irmovl Stack, %ebp  	# Set up base pointer
+  0x00c: 7024000000   | 	jmp Main		# Execute main program
+                      | 
+                      | # Array of 4 elements
+  0x014:              | 	.align 4
+  0x014: 0d000000     | array:	.long 0xd
+  0x018: c0000000     | 	.long 0xc0
+  0x01c: 000b0000     | 	.long 0xb00
+  0x020: 00a00000     | 	.long 0xa000
+                      | 
+  0x024: 30f004000000 | Main:	irmovl $4,%eax
+  0x02a: a00f         | 	pushl %eax	# Push 4
+  0x02c: 30f214000000 | 	irmovl array,%edx
+  0x032: a02f         | 	pushl %edx      # Push array
+  0x034: 803a000000   | 	call rSum	# Sum(array, 4)
+  0x039: 00           | 	halt
+                      | 
+                      | 	# int Sum(int *Start, int Count)
+  0x03a: a05f         | rSum:	pushl %ebp
+  0x03c: 2045         | 	rrmovl %esp,%ebp
+  0x03e: 30f014000000 | 	irmovl $20,%eax
+  0x044: 6104         | 	subl %eax,%esp
+  0x046: a03f         | 	pushl %ebx
+  0x048: 503508000000 | 	mrmovl 8(%ebp),%ebx
+  0x04e: 50050c000000 | 	mrmovl 12(%ebp),%eax
+  0x054: 6200         | 	andl %eax,%eax
+  0x056: 718b000000   | 	jle L38
+  0x05b: 30f2f8ffffff | 	irmovl $-8,%edx
+  0x061: 6024         | 	addl %edx,%esp
+  0x063: 30f2ffffffff | 	irmovl $-1,%edx
+  0x069: 6020         | 	addl %edx,%eax
+  0x06b: a00f         | 	pushl %eax
+  0x06d: 30f204000000 | 	irmovl $4,%edx
+  0x073: 2030         | 	rrmovl %ebx,%eax
+  0x075: 6020         | 	addl %edx,%eax
+  0x077: a00f         | 	pushl %eax
+  0x079: 803a000000   | 	call rSum
+  0x07e: 502300000000 | 	mrmovl (%ebx),%edx
+  0x084: 6020         | 	addl %edx,%eax
+  0x086: 708d000000   | 	jmp L39
+  0x08b: 6300         | L38:	xorl %eax,%eax
+  0x08d: 5035e8ffffff | L39:	mrmovl -24(%ebp),%ebx
+  0x093: d0           | 	leave
+  0x094: 90           | 	ret
+                      | 
+  0x400:              | 	.pos 0x400
+  0x400:              | Stack:	# The stack goes here
+                      | /* $end code-ysa */
+                      | /* $end code-yso */

@@ -1,0 +1,55 @@
+/* $begin code-yso */
+/* $begin code-ysa */
+# Execution begins at address 0
+# This version uses a leave instruction
+	.pos 0
+init:	irmovl Stack, %esp  	# Set up Stack pointer
+	irmovl Stack, %ebp  	# Set up base pointer
+	jmp Main		# Execute main program
+
+# Array of 4 elements
+	.align 4
+array:	.long 0xd
+	.long 0xc0
+	.long 0xb00
+	.long 0xa000
+
+Main:	irmovl $4,%eax
+	pushl %eax	# Push 4
+	irmovl array,%edx
+	pushl %edx      # Push array
+	call rSum	# Sum(array, 4)
+	halt
+
+	# int Sum(int *Start, int Count)
+rSum:	pushl %ebp
+	rrmovl %esp,%ebp
+	irmovl $20,%eax
+	subl %eax,%esp
+	pushl %ebx
+	mrmovl 8(%ebp),%ebx
+	mrmovl 12(%ebp),%eax
+	andl %eax,%eax
+	jle L38
+	irmovl $-8,%edx
+	addl %edx,%esp
+	irmovl $-1,%edx
+	addl %edx,%eax
+	pushl %eax
+	irmovl $4,%edx
+	rrmovl %ebx,%eax
+	addl %edx,%eax
+	pushl %eax
+	call rSum
+	mrmovl (%ebx),%edx
+	addl %edx,%eax
+	jmp L39
+L38:	xorl %eax,%eax
+L39:	mrmovl -24(%ebp),%ebx
+	leave
+	ret
+
+	.pos 0x400
+Stack:	# The stack goes here
+/* $end code-ysa */
+/* $end code-yso */

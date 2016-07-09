@@ -1,0 +1,9 @@
+                      | # Exception handling
+                      | # /* $begin prog9-yo */
+  0x000: 6300         |    xorl %eax,%eax 
+  0x002: 740e000000   |    jne  Target      # Not taken
+  0x007: 30f001000000 |    irmovl $1, %eax  # Fall through
+  0x00d: 00           |    halt
+  0x00e:              | Target:
+  0x00e: ff           |    .byte 0xFF       # Invalid instruction code
+                      | # /* $end prog9-yo */

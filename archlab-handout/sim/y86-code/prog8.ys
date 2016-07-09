@@ -1,0 +1,13 @@
+# Demonstrate branch cancellation
+# /* $begin prog8-ys */
+# prog8
+   xorl %eax,%eax 
+   jne  target        # Not taken
+   irmovl $1, %eax    # Fall through
+   halt
+target:
+   irmovl $2, %edx    # Target
+   irmovl $3, %ebx    # Target+1
+# /* $end prog8-ys */
+   halt
+

@@ -1,0 +1,391 @@
+#######################################################################
+# Test for copying block of size 63;
+#######################################################################
+	.pos 0
+main:	irmovl Stack, %esp  	# Set up stack pointer
+	irmovl Stack, %ebp  	# Set up base pointer
+
+	# Set up arguments for copy function and then invoke it
+	irmovl $63, %eax		# src and dst have 63 elements
+	pushl %eax
+	irmovl dest, %eax	# dst array
+	pushl %eax
+	irmovl src, %eax	# src array
+	pushl %eax
+	call ncopy		 
+	halt			# should halt with num nonzeros in %eax
+StartFun:
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len ints to dst.
+# Return the number of positive ints (>0) contained in src.
+#
+# Include your name and ID here.
+#
+# Describe how and why you modified the baseline code.
+#
+##################################################################
+# Do not modify this portion
+# Function prologue.
+ncopy:	pushl %ebp	# Save old frame pointer
+rrmovl %esp,%ebp	# Set up new frame pointer
+pushl %esi	# Save callee-save regs
+pushl %ebx
+pushl %edi
+mrmovl 8(%ebp),%ebx	# src
+mrmovl 16(%ebp),%edx	# len
+mrmovl 12(%ebp),%ecx	# dst
+
+##################################################################
+# You can modify this portion
+# Loop header
+xorl %eax,%eax	# count = 0;
+irmovl $0, %edi	#edi <==> i
+rrmovl %edi, %esi
+iaddl $-5, %edx
+subl	%edx, %esi
+jge	finish
+
+Loop0:	mrmovl (%ebx), %esi	# read val from src...
+rmmovl %esi, (%ecx)	# ...and store it to dst
+andl %esi, %esi	# val <= 0?
+jle Npos0	# if so, goto Npos:
+iaddl $1,%eax	# count++
+
+Npos0:	mrmovl 4(%ebx),%esi
+rmmovl %esi ,4 (%ecx)
+andl	%esi,%esi
+jle Npos1
+iaddl $1,%eax
+
+Npos1:	mrmovl 8(%ebx),%esi
+rmmovl %esi ,8(%ecx)
+andl	%esi,%esi
+jle Npos2
+iaddl $1,%eax
+
+Npos2:	mrmovl 12(%ebx),%esi
+rmmovl %esi ,12(%ecx)
+andl	%esi,%esi
+jle Npos3
+iaddl $1,%eax
+
+Npos3:	mrmovl 16(%ebx),%esi
+rmmovl %esi ,16(%ecx)
+andl	%esi,%esi
+jle Npos4
+iaddl $1,%eax
+
+Npos4:	mrmovl 20(%ebx),%esi
+rmmovl %esi ,20(%ecx)
+andl	%esi,%esi
+jle Npos5
+iaddl $1,%eax
+
+Npos5:	iaddl $6, %edi	# i+5
+iaddl $24, %ebx
+iaddl $24, %ecx
+rrmovl	%edi , %esi
+subl	%edx,%esi
+jl Loop0
+
+finish :	iaddl $5, %edx
+rrmovl	%edi , %esi
+subl	%edx,%esi
+jge	Done
+
+Loop2:	mrmovl (%ebx), %esi	# read val from src...
+rmmovl %esi, (%ecx)	# ...and store it to dst
+andl %esi, %esi	# val <= 0?
+jle Npos10	# if so, goto Npos:
+iaddl $1,%eax	# count++
+
+Npos10:	iaddl $1, %edi	# len--
+iaddl $4, %ebx	# src++
+iaddl $4, %ecx	# dst++
+rrmovl	%edi , %esi
+subl	%edx,%esi
+jl Loop2
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+popl %edi               # Restore callee-save registers
+popl %ebx
+popl %esi
+rrmovl %ebp, %esp
+popl %ebp
+ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len ints to dst.
+# Return the number of positive ints (>0) contained in src.
+#
+# Include your name and ID here.
+#
+# Describe how and why you modified the baseline code.
+#
+##################################################################
+# Do not modify this portion
+# Function prologue.
+ncopy:	pushl %ebp	# Save old frame pointer
+rrmovl %esp,%ebp	# Set up new frame pointer
+pushl %esi	# Save callee-save regs
+pushl %ebx
+pushl %edi
+mrmovl 8(%ebp),%ebx	# src
+mrmovl 16(%ebp),%edx	# len
+mrmovl 12(%ebp),%ecx	# dst
+
+##################################################################
+# You can modify this portion
+  # Loop header
+  xorl %eax,%eax    # count = 0;
+ 	andl %edx, %edx
+  jle Done
+  iaddl $-4, %edx       # len = len - 4 
+  jl tail
+
+loop:  
+  mrmovl	(%ebx), %esi   # read val from src
+  mrmovl 4(%ebx), %edi  	# read val from src +4
+  rmmovl %esi, (%ecx)   # store src[0] to dest[0]
+  andl %esi, %esi     # src[0] > 0 
+  jle pos1      	       	# yes ? goto pos1:
+  iaddl $1, %eax     # count++
+
+pos1:
+ 	rmmovl %edi, 4(%ecx) # store src[1] in dest[1]
+  andl	%edi, %edi       # src[1] > 0 
+  jle pos2              	# No ? get the next element
+  iaddl $1, %eax    	# count++
+  
+pos2:
+  mrmovl 8(%ebx), %esi    	# read val from src +8
+  mrmovl 12(%ebx), %edi   # read val from src +12
+ 	rmmovl %esi, 8(%ecx)      # store src[2] in dest[2]
+  andl %esi, %esi        # src[2] > 0 
+  jle pos3              # No ? get the next element
+  iaddl $1, %eax    	 # count++
+  
+pos3:
+  rmmovl %edi, 12(%ecx)  	# store src[3] in dest[3]
+  andl %edi, %edi             # src[3] > 0 
+  jle nextLoop               # No ? get the next element
+  iaddl $1, %eax                 # count++
+
+nextLoop: 
+  iaddl $16 , %ebx      	# goto next four positions of src
+  iaddl $16 , %ecx     # goto next four positions of dest
+  iaddl $-4, %edx      # len = len - 4
+  jge loop             # if four left, do again
+
+tail:
+  iaddl $4, %edx        # get actual len  
+  
+extra1:
+  iaddl $-1 , %edx
+  jl Done              # Done
+ 	mrmovl (%ebx), %esi     # Take care of extras here
+  mrmovl 4(%ebx), %edi
+  rmmovl %esi, (%ecx)
+  andl	%esi, %esi
+  jle	extra2
+  iaddl $1, %eax
+  
+extra2:
+  iaddl $-1 , %edx
+  jl Done  
+  rmmovl %edi, 4(%ecx)
+  andl %edi, %edi
+  jle extra3
+ 	iaddl $1, %eax
+
+extra3:
+  iaddl $-1 , %edx
+  jl Done
+ 	mrmovl 8(%ebx), %esi
+  rmmovl %esi, 8(%ecx)
+  andl %esi, %esi
+  jle Done
+  iaddl $1, %eax  
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+popl %edi               # Restore callee-save registers
+popl %ebx
+popl %esi
+rrmovl %ebp, %esp
+popl %ebp
+ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+EndFun:
+
+###############################
+# Source and destination blocks 
+###############################
+	.align 4
+src:
+	.long -1
+	.long -2
+	.long 3
+	.long 4
+	.long -5
+	.long 6
+	.long 7
+	.long -8
+	.long -9
+	.long -10
+	.long -11
+	.long -12
+	.long 13
+	.long 14
+	.long 15
+	.long -16
+	.long 17
+	.long 18
+	.long 19
+	.long 20
+	.long -21
+	.long -22
+	.long 23
+	.long -24
+	.long -25
+	.long 26
+	.long -27
+	.long 28
+	.long 29
+	.long -30
+	.long -31
+	.long 32
+	.long -33
+	.long -34
+	.long -35
+	.long 36
+	.long -37
+	.long 38
+	.long 39
+	.long 40
+	.long 41
+	.long -42
+	.long -43
+	.long -44
+	.long -45
+	.long -46
+	.long -47
+	.long 48
+	.long -49
+	.long -50
+	.long 51
+	.long 52
+	.long -53
+	.long 54
+	.long -55
+	.long 56
+	.long -57
+	.long 58
+	.long 59
+	.long 60
+	.long 61
+	.long 62
+	.long -63
+	.long 0xbcdefa # This shouldn't get moved
+
+	.align 16
+Predest:
+	.long 0xbcdefa
+dest:
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+	.long 0xcdefab
+Postdest:
+	.long 0xdefabc
+
+.align 4
+# Run time stack
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+
+Stack:

@@ -1,0 +1,9 @@
+# Exception handling
+# /* $begin prog9-yo */
+   xorl %eax,%eax 
+   jne  Target      # Not taken
+   irmovl $1, %eax  # Fall through
+   halt
+Target:
+   .byte 0xFF       # Invalid instruction code
+# /* $end prog9-yo */

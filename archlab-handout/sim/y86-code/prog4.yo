@@ -1,0 +1,5 @@
+                      | # prog4: No padding
+  0x000: 30f20a000000 |   irmovl $10,%edx
+  0x006: 30f003000000 |   irmovl  $3,%eax
+  0x00c: 6020         |   addl %edx,%eax
+  0x00e: 00           |   halt

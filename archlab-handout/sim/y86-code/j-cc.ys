@@ -1,0 +1,15 @@
+	      irmovl $1, %esi
+	      irmovl $2, %edi
+	      irmovl $4, %ebp
+	      irmovl $-32, %eax
+	      irmovl $64, %edx
+	      subl %edx,%eax
+	      je target
+	      nop
+              halt
+target:
+	      addl %esi,%edx
+	      nop
+              nop
+              nop
+	      halt

@@ -1,0 +1,60 @@
+  0x000:              | 	.pos 	0
+  0x000: 30f400010000 | init:	irmovl	Stack,	%esp
+  0x006: 30f500010000 | 	irmovl 	Stack,	%ebp
+  0x00c: 802c000000   | 	call	Main
+  0x011: 00           | 	halt
+                      | 
+  0x014:              | .align 4
+                      | # Source block
+  0x014:              | src:
+  0x014: 0a000000     |        	 .long 0x00a
+  0x018: b0000000     |       	 .long 0x0b0
+  0x01c: 000c0000     |       	 .long 0xc00
+                      | # Destination block
+  0x020:              | dest:
+  0x020: 11010000     |      	 .long 0x111
+  0x024: 22020000     |     	 .long 0x222
+  0x028: 33030000     |     	 .long 0x333
+                      | 
+  0x02c: a05f         | Main:	pushl	%ebp
+  0x02e: 2045         | 	rrmovl 	%esp , %ebp
+  0x030: 30f60c000000 | 	irmovl	$12 , %esi
+  0x036: 6164         | 	subl	%esi , %esp
+  0x038: 30f014000000 | 	irmovl	src , %eax
+  0x03e: 400400000000 | 	rmmovl	%eax , (%esp)
+  0x044: 30f020000000 | 	irmovl	dest , %eax
+  0x04a: 400404000000 | 	rmmovl %eax , 4(%esp)
+  0x050: 30f003000000 | 	irmovl	$3, %eax
+  0x056: 400408000000 | 	rmmovl %eax, 8(%esp)
+  0x05c: 806c000000   | 	call	copy_block
+  0x061: 30f60c000000 | 	irmovl	$12 , %esi
+  0x067: 6064         | 	addl	%esi , %esp 
+  0x069: b05f         | 	popl	%ebp
+  0x06b: 90           | 	ret	
+                      | 
+  0x06c:              | copy_block:
+  0x06c: a05f         | 	pushl	%ebp
+  0x06e: 2045         | 	rrmovl	%esp, %ebp
+  0x070: 6300         | 	xorl	%eax , %eax
+                      | 	
+  0x072: 50250c000000 | 	mrmovl	12(%ebp) , %edx	#edx <==>dest
+  0x078: 506508000000 | 	mrmovl	8(%ebp) , %esi		#esi <==> src
+  0x07e: 501510000000 | 	mrmovl	16(%ebp),%ecx		#ecx <==> len
+  0x084: 6211         | 	andl	%ecx, %ecx
+  0x086: 73b0000000   | 	je	End
+  0x08b: 503600000000 | Loop:	mrmovl	 (%esi) , %ebx
+  0x091: 403200000000 | 	rmmovl  %ebx , (%edx)
+  0x097: 6330         | 	xorl 	%ebx , %eax
+  0x099: 30f704000000 | 	irmovl	$4 ,  %edi
+  0x09f: 6072         | 	addl	%edi , %edx
+  0x0a1: 6076         | 	addl	%edi , %esi
+  0x0a3: 30f701000000 | 	irmovl	$1,%edi
+  0x0a9: 6171         | 	subl	%edi , %ecx
+  0x0ab: 748b000000   | 	jne	Loop
+                      | 
+  0x0b0: b05f         | End:	popl	%ebp
+  0x0b2: 90           | 	ret
+                      | 
+  0x100:              | 	.pos	0x100
+  0x100:              | Stack:
+                      | 

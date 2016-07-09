@@ -1,0 +1,7 @@
+# prog10
+    irmovl $1,%eax
+    xorl %esp,%esp        # Set stack pointer to 0 and CC to 100
+    pushl %eax            # Attempt to write to 0xfffffffc
+    addl  %eax,%eax       # (Should not be executed) Would set CC to 000
+    irmovl $2, %eax       # Not executed
+    irmovl $3, %eax       # Not executed

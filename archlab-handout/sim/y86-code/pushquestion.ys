@@ -1,0 +1,5 @@
+	# Assembly Code to test semantics of pushl
+	irmovl 0x100, %esp
+	pushl %esp  # Ambiguous
+	popl  %eax
+	halt

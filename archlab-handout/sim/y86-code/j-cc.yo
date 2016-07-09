@@ -1,0 +1,15 @@
+  0x000: 30f601000000 | 	      irmovl $1, %esi
+  0x006: 30f702000000 | 	      irmovl $2, %edi
+  0x00c: 30f504000000 | 	      irmovl $4, %ebp
+  0x012: 30f0e0ffffff | 	      irmovl $-32, %eax
+  0x018: 30f240000000 | 	      irmovl $64, %edx
+  0x01e: 6120         | 	      subl %edx,%eax
+  0x020: 7327000000   | 	      je target
+  0x025: 10           | 	      nop
+  0x026: 00           |               halt
+  0x027:              | target:
+  0x027: 6062         | 	      addl %esi,%edx
+  0x029: 10           | 	      nop
+  0x02a: 10           |               nop
+  0x02b: 10           |               nop
+  0x02c: 00           | 	      halt

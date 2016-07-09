@@ -1,0 +1,49 @@
+                      | # Execution begins at address 0
+  0x000:              | 	.pos 	0
+  0x000: 30f400010000 | init: 	irmovl 	Stack, %esp
+  0x006: 30f500010000 | 	irmovl	Stack, %ebp
+  0x00c: 802c000000   | 	call	Main
+  0x011: 00           | 	halt
+                      | 
+                      | # Sample linked list
+  0x014:              | 	.align 	4
+  0x014:              | ele1:	
+  0x014: 0a000000     | 	.long 	0x00a
+  0x018: 1c000000     |         	.long 	ele2
+  0x01c:              | ele2:	
+  0x01c: b0000000     | 	 .long 	0x0b0
+  0x020: 24000000     | 	 .long 	ele3
+  0x024:              | ele3:	
+  0x024: 000c0000     | 	 .long	 0xc00
+  0x028: 00000000     | 	.long 	0
+                      | 
+  0x02c: a05f         | Main:	pushl 	%ebp
+  0x02e: 2045         | 	rrmovl	%esp,	%ebp
+  0x030: 30f014000000 | 	irmovl	ele1 , 	%eax
+  0x036: a00f         | 	pushl 	%eax
+  0x038: 8042000000   | 	call 	sumlist
+  0x03d: 2054         | 	rrmovl 	%ebp , %esp
+  0x03f: b05f         | 	popl	%ebp
+  0x041: 90           | 	ret
+                      | # int sum_list(list_ptr ls)
+  0x042: a05f         | sumlist:	pushl 	%ebp
+  0x044: 2045         | 	rrmovl 	%esp ,%ebp
+  0x046: 6300         | 	xorl 	%eax,%eax		#the return val  = 0
+  0x048: 502508000000 | 	mrmovl	8(%ebp) , %edx
+  0x04e: 6222         | 	andl	%edx , %edx		#ls ==> %edx
+  0x050: 7374000000   | 	je	End			#if  ls == 0 goto End 
+  0x055: 501200000000 | Loop:	mrmovl	(%edx) , %ecx  		#ls->val  ==> %ecx
+  0x05b: 6010         | 	addl	%ecx , %eax		#val += ls->val
+  0x05d: 30f704000000 | 	irmovl	$4 , %edi		
+  0x063: 6072         | 	addl	%edi , %edx		#next ==> edx
+  0x065: 506200000000 | 	mrmovl (%edx),	%esi		
+  0x06b: 2062         | 	rrmovl	%esi , %edx		#ls->next ==>edx
+  0x06d: 6222         | 	andl	%edx , %edx		#set condition codes
+  0x06f: 7455000000   | 	jne	Loop			#if ls != 0 goto Loop
+                      | 
+  0x074: 2054         | End:	rrmovl 	%ebp , %esp
+  0x076: b05f         | 	popl 	%ebp
+  0x078: 90           | 	ret		
+                      | 
+  0x100:              | 	.pos 0x100
+  0x100:              | Stack:

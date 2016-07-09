@@ -1,0 +1,7 @@
+                      | # Test of Push semantics for Y86
+  0x000: 30f400010000 | 	irmovl $0x100,%esp  # Initialize stack pointer
+  0x006: 2040         | 	rrmovl %esp,%eax    # Save stack pointer
+  0x008: a04f         | 	pushl %esp          # Push the stack pointer (old or new?)
+  0x00a: b02f         | 	popl  %edx          # Get it back
+  0x00c: 6120         | 	subl  %edx,%eax     # Compute difference.  Either 0 (old) or 4 (new).
+  0x00e: 00           | 	halt

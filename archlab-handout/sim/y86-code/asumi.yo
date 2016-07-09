@@ -1,0 +1,42 @@
+                      | /* $begin code-yso */
+                      | /* $begin code-ysa */
+                      | # This version makes use of the iaddl instruction
+                      | # Execution begins at address 0
+  0x000:              | 	.pos 0
+  0x000: 30f400010000 | init:	irmovl Stack, %esp  	# Set up Stack pointer
+  0x006: 30f500010000 | 	irmovl Stack, %ebp  	# Set up base pointer
+  0x00c: 7024000000   | 	jmp Main		# Execute main program
+                      | 
+                      | # Array of 4 elements
+  0x014:              | 	.align 4
+  0x014: 0d000000     | array:	.long 0xd
+  0x018: c0000000     | 	.long 0xc0
+  0x01c: 000b0000     | 	.long 0xb00
+  0x020: 00a00000     | 	.long 0xa000
+                      | 
+  0x024: 30f004000000 | Main:	irmovl $4,%eax
+  0x02a: a00f         | 	pushl %eax	# Push 4
+  0x02c: 30f214000000 | 	irmovl array,%edx
+  0x032: a02f         | 	pushl %edx      # Push array
+  0x034: 803a000000   | 	call Sum	# Sum(array, 4)
+  0x039: 00           | 	halt
+                      | 
+                      | 	# int Sum(int *Start, int Count)
+  0x03a: a05f         | Sum:	pushl %ebp
+  0x03c: 2045         | 	rrmovl %esp,%ebp
+  0x03e: 501508000000 | 	mrmovl 8(%ebp),%ecx 	# ecx = Start
+  0x044: 50250c000000 | 	mrmovl 12(%ebp),%edx	# edx = Count
+  0x04a: 30f000000000 | 	irmovl $0, %eax		# sum = 0
+  0x050: 6222         | 	andl   %edx,%edx
+  0x052: 7370000000   | 	je     End
+  0x057: 506100000000 | Loop:	mrmovl (%ecx),%esi   # get *Start
+  0x05d: 6060         | 	addl %esi,%eax       # add to sum
+  0x05f: c0f104000000 | 	iaddl  $4,%ecx       # Sum++
+  0x065: c0f2ffffffff |         iaddl  $-1,%edx      # Count--
+  0x06b: 7457000000   | 	jne    Loop          # Stop when 0
+  0x070: b05f         | End:	popl %ebp
+  0x072: 90           | 	ret
+  0x100:              | 	.pos 0x100
+  0x100:              | Stack:	# The stack goes here
+                      | /* $end code-ysa */
+                      | /* $end code-yso */

@@ -1,0 +1,13 @@
+/* $begin ret-hazard-ys */
+# Test instruction that modifies %esp followed by ret
+	irmovl mem,%ebx
+	mrmovl  0(%ebx),%esp # Sets %esp to point to return point
+	ret		     # Returns to return point 
+	halt                 # 
+rtnpt:  irmovl $5,%esi       # Return point
+	halt
+.pos 0x40
+mem:	.long stack	     # Holds desired stack pointer
+.pos 0x50
+stack:	.long rtnpt          # Top of stack: Holds return point
+/* $end ret-hazard-ys */

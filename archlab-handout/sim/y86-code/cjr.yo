@@ -1,0 +1,17 @@
+                      | # /* $begin cjr-ys */
+                      | # Code to generate a combination of not-taken branch and ret
+  0x000: 30f440000000 | 	irmovl Stack, %esp
+  0x006: 30f024000000 | 	irmovl rtnp,%eax
+  0x00c: a00f         | 	pushl %eax	   # Set up return pointer
+  0x00e: 6300         | 	xorl %eax,%eax     # Set Z condition code
+  0x010: 741c000000   | 	jne target	   # Not taken (First part of combination)
+  0x015: 30f001000000 |         irmovl $1,%eax     # Should execute this
+  0x01b: 00           | 	halt
+  0x01c: 90           | target:	ret		   # Second part of combination
+  0x01d: 30f302000000 | 	irmovl $2,%ebx	   # Should not execute this
+  0x023: 00           | 	halt
+  0x024: 30f203000000 | rtnp: 	irmovl $3,%edx     # Should not execute this
+  0x02a: 00           | 	halt
+  0x040:              | .pos 0x40
+  0x040:              | Stack:
+                      | # /* $end cjr-ys */

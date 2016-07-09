@@ -1,0 +1,14 @@
+# Demonstration of return
+# /* $begin prog7-ys */
+# prog7
+   irmovl Stack,%esp  # Initialize stack pointer
+   call Proc          # procedure call
+   irmovl $10,%edx    # return point
+   halt
+.pos 0x20
+Proc:                 # Proc:
+   ret                # return immediately
+   rrmovl %edx,%ebx   # not executed
+.pos 0x30
+Stack:                # Stack: Stack pointer
+# /* $end prog7-ys */
