@@ -184,7 +184,6 @@ void eval(char *cmdline)
     int bg;                 /*should the job run in bg or fg?*/
     pid_t pid;
     sigset_t mask;          /*mask for signal*/
-    int buildin_cmd_num;
 
     stpcpy(buf,cmdline);
     bg = parseline(buf,argv);
@@ -291,8 +290,8 @@ int builtin_cmd(char **argv)
     if(!strcmp(argv[0],"&"))
         return 1;
     if(!strcmp(argv[0],"bg")||!strcmp(argv[0],"fg")){
-        return 1;
         do_bgfg(argv);
+        return 1;
     }
     if(!strcmp(argv[0],"jobs")){
         listjobs(jobs);
