@@ -1,0 +1,108 @@
+
+memlib.o:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00000000 <mem_init>:
+   0:	83 ec 1c             	sub    $0x1c,%esp
+   3:	c7 04 24 00 00 40 01 	movl   $0x1400000,(%esp)
+   a:	e8 fc ff ff ff       	call   b <mem_init+0xb>
+   f:	85 c0                	test   %eax,%eax
+  11:	a3 08 00 00 00       	mov    %eax,0x8
+  16:	74 15                	je     2d <mem_init+0x2d>
+  18:	8d 90 00 00 40 01    	lea    0x1400000(%eax),%edx
+  1e:	89 15 00 00 00 00    	mov    %edx,0x0
+  24:	a3 04 00 00 00       	mov    %eax,0x4
+  29:	83 c4 1c             	add    $0x1c,%esp
+  2c:	c3                   	ret    
+  2d:	a1 00 00 00 00       	mov    0x0,%eax
+  32:	c7 44 24 08 1a 00 00 	movl   $0x1a,0x8(%esp)
+  39:	00 
+  3a:	c7 44 24 04 01 00 00 	movl   $0x1,0x4(%esp)
+  41:	00 
+  42:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
+  49:	89 44 24 0c          	mov    %eax,0xc(%esp)
+  4d:	e8 fc ff ff ff       	call   4e <mem_init+0x4e>
+  52:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  59:	e8 fc ff ff ff       	call   5a <mem_init+0x5a>
+  5e:	66 90                	xchg   %ax,%ax
+
+00000060 <mem_deinit>:
+  60:	83 ec 1c             	sub    $0x1c,%esp
+  63:	a1 08 00 00 00       	mov    0x8,%eax
+  68:	89 04 24             	mov    %eax,(%esp)
+  6b:	e8 fc ff ff ff       	call   6c <mem_deinit+0xc>
+  70:	83 c4 1c             	add    $0x1c,%esp
+  73:	c3                   	ret    
+  74:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
+  7a:	8d bf 00 00 00 00    	lea    0x0(%edi),%edi
+
+00000080 <mem_reset_brk>:
+  80:	a1 08 00 00 00       	mov    0x8,%eax
+  85:	a3 04 00 00 00       	mov    %eax,0x4
+  8a:	c3                   	ret    
+  8b:	90                   	nop
+  8c:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+
+00000090 <mem_sbrk>:
+  90:	83 ec 1c             	sub    $0x1c,%esp
+  93:	a1 04 00 00 00       	mov    0x4,%eax
+  98:	8b 54 24 20          	mov    0x20(%esp),%edx
+  9c:	85 d2                	test   %edx,%edx
+  9e:	78 18                	js     b8 <mem_sbrk+0x28>
+  a0:	01 c2                	add    %eax,%edx
+  a2:	3b 15 00 00 00 00    	cmp    0x0,%edx
+  a8:	77 0e                	ja     b8 <mem_sbrk+0x28>
+  aa:	89 15 04 00 00 00    	mov    %edx,0x4
+  b0:	83 c4 1c             	add    $0x1c,%esp
+  b3:	c3                   	ret    
+  b4:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+  b8:	e8 fc ff ff ff       	call   b9 <mem_sbrk+0x29>
+  bd:	c7 00 0c 00 00 00    	movl   $0xc,(%eax)
+  c3:	a1 00 00 00 00       	mov    0x0,%eax
+  c8:	c7 44 24 08 2d 00 00 	movl   $0x2d,0x8(%esp)
+  cf:	00 
+  d0:	c7 44 24 04 01 00 00 	movl   $0x1,0x4(%esp)
+  d7:	00 
+  d8:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
+  df:	89 44 24 0c          	mov    %eax,0xc(%esp)
+  e3:	e8 fc ff ff ff       	call   e4 <mem_sbrk+0x54>
+  e8:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+  ed:	83 c4 1c             	add    $0x1c,%esp
+  f0:	c3                   	ret    
+  f1:	eb 0d                	jmp    100 <mem_heap_lo>
+  f3:	90                   	nop
+  f4:	90                   	nop
+  f5:	90                   	nop
+  f6:	90                   	nop
+  f7:	90                   	nop
+  f8:	90                   	nop
+  f9:	90                   	nop
+  fa:	90                   	nop
+  fb:	90                   	nop
+  fc:	90                   	nop
+  fd:	90                   	nop
+  fe:	90                   	nop
+  ff:	90                   	nop
+
+00000100 <mem_heap_lo>:
+ 100:	a1 08 00 00 00       	mov    0x8,%eax
+ 105:	c3                   	ret    
+ 106:	8d 76 00             	lea    0x0(%esi),%esi
+ 109:	8d bc 27 00 00 00 00 	lea    0x0(%edi,%eiz,1),%edi
+
+00000110 <mem_heap_hi>:
+ 110:	a1 04 00 00 00       	mov    0x4,%eax
+ 115:	83 e8 01             	sub    $0x1,%eax
+ 118:	c3                   	ret    
+ 119:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+
+00000120 <mem_heapsize>:
+ 120:	a1 04 00 00 00       	mov    0x4,%eax
+ 125:	2b 05 08 00 00 00    	sub    0x8,%eax
+ 12b:	c3                   	ret    
+ 12c:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+
+00000130 <mem_pagesize>:
+ 130:	e9 fc ff ff ff       	jmp    131 <mem_pagesize+0x1>
