@@ -1,7 +1,9 @@
 # CSAPP-Labs
 ###深入理解计算机系统中的8大经典实验及过程
-#### Bomb Labs
------
+
+
+#### 1.Bomb Labs
+
 相关实验过程博客如下:
 
 [Bomb lab 实验1，bomb1&2](http://blog.csdn.net/u012336567/article/details/51661379)
@@ -13,20 +15,22 @@
 [Bomb lab 实验4, secert bomb](http://blog.csdn.net/u012336567/article/details/51782538)
 
 
-#### Buffer Lab
-------
+#### 2.Buffer Lab
+
 相关实验过程博客如下:
 
 [Buffer lab 实验解答及总结](http://blog.csdn.net/u012336567/article/details/51832328)
 
-#### Architecture Lab
------
+#### 3.Architecture Lab
+
 [Architecture Lab 实验解答及总结](http://blog.csdn.net/u012336567/article/details/51867766)
 
-#### Cache Lab
-----
+#### 4.Cache Lab
 [Cache Lab实验过程总结](http://blog.csdn.net/u012336567/article/details/51899136)
 
-#### Shell Lab
------
+#### 5.Shell Lab
 [Shell lab 实验过程总结](http://blog.csdn.net/u012336567/article/details/51926577)
+#### 6.Malloc Lab
+[Malloc lab 实验过程总结](http://blog.csdn.net/u012336567/article/details/52004250)
+#### 7.Proxy Lab
+[Proxy lab 实验过程总结](http://blog.csdn.net/u012336567/article/details/52056089)
